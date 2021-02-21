@@ -1,0 +1,48 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.21'
+    id 'nu.studer.jooq' version '5.2'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    jooqGenerator 'org.jooq:jooq-meta-extensions'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jooq {
+    configurations {
+        main {
+            generationTool {
+                logging = org.jooq.meta.jaxb.Logging.WARN
+                generator {
+                    database {
+                        name = 'org.jooq.meta.extensions.ddl.DDLDatabase'
+                        properties {
+                            property {
+                                key = 'scripts'
+                                value = 'src/main/resources/db/**'
+                            }
+                            property {
+                                key = 'sort'
+                                value = 'semantic'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
